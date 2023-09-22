@@ -1,14 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
-import { FlatList } from "react-native-web";
+import { FlatList } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const Item = ({ post }) => {
-  console.log(post);
   const s = StyleSheet.create({
-    container: {
-      margin: "1em",
-    },
+    container: {},
     post: {
       color: "white",
       display: "flex",
@@ -16,10 +14,10 @@ const Item = ({ post }) => {
     },
   });
   return (
-    <View style={s.container}>
+    <SafeAreaView style={s.container}>
       <Text style={s.post}>Title: {post.title}</Text>
       <Text style={s.post}>Post: {post.body}</Text>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -40,50 +38,58 @@ export default function App() {
   }, []);
   if (!loading) {
     return (
-      <View style={mera.container}>
-        <View style={mera.header}>
-          <Text style={mera.header}>Welcome to my Blog!</Text>
-        </View>
-        <View style={mera.blog}>
-          <FlatList
-            data={Data}
-            renderItem={({ item }) => <Item post={item} />}
-          ></FlatList>
-        </View>
-        <StatusBar style="auto" />
-      </View>
+      <SafeAreaProvider>
+        <SafeAreaView style={mera.container}>
+          <SafeAreaView style={mera.header}>
+            <Text style={mera.headerText}>Welcome to my Blog!</Text>
+          </SafeAreaView>
+          <SafeAreaView style={mera.blog}>
+            <FlatList
+              style={mera.flat}
+              data={Data}
+              renderItem={({ item }) => <Item post={item} />}
+            ></FlatList>
+          </SafeAreaView>
+          <StatusBar style="auto" />
+        </SafeAreaView>
+      </SafeAreaProvider>
     );
   } else {
     return (
-      <View style={mera.container}>
-        <ActivityIndicator />
-        <Text>Rendered</Text>
-      </View>
+      <SafeAreaProvider>
+        <View style={mera.container}>
+          <ActivityIndicator />
+          <Text>Rendered</Text>
+        </View>
+      </SafeAreaProvider>
     );
   }
 }
 
 const mera = StyleSheet.create({
   header: {
-    top: 0,
     color: "white",
     display: "flex",
     justifyContent: "center",
-    fontSize: 30,
+    alignContent: "center",
+    margin: "auto",
+
     backgroundColor: "red",
-    padding: 10,
-    margin: 0,
+  },
+  headerText: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 35,
   },
   container: {
-    width: "100%",
-    padding: 0,
     backgroundColor: "black",
   },
   blog: {
-    width: "80%",
     display: "flex",
-    margin: "auto",
+    margin: "0",
+    padding: "0",
   },
+  flat: {},
   mainText: {
     color: "white",
     display: "flex",
